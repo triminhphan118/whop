@@ -23,7 +23,17 @@ export default buildConfig({
   },
   collections: [Users, Media, Categories],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: (() => {
+    const secret = process.env.PAYLOAD_SECRET;
+    if (!secret) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('PAYLOAD_SECRET is required in production');
+      }
+      console.warn('⚠️ Using default development PAYLOAD_SECRET');
+      return 'dev-secret';
+    }
+    return secret;
+  })(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
