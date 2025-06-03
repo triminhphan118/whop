@@ -4,6 +4,7 @@ import { FC } from 'react';
 import Footer from './footer';
 import Navbar from './navbar';
 import SearchFilters from './search-filters';
+import { Category } from '@/payload-types';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,16 +29,14 @@ const Layout: FC<LayoutProps> = async ({ children }) => {
   const formattedData = data?.docs?.map(doc => ({
     ...doc,
     subCategories: (doc.subCategories?.docs ?? [])?.map(subDoc => ({
-      ...(subDoc Category),
+      ...(subDoc as Category),
     })),
   }));
 
-  console.log(data);
-  console.log(formattedData);
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <SearchFilters data={data} />
+      <SearchFilters data={formattedData} />
       <div className="flex-1 bg-[#f4f4f0]">{children}</div>
       <Footer />
     </div>
